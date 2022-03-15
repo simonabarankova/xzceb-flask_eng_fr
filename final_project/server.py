@@ -1,24 +1,24 @@
-from machinetranslation import translator
-from flask import Flask, render_template, request
-import json
+from urllib import request
+from flask import Flask, render_template
+from flask import request
+import machinetranslation
 
-app = Flask("Web Translator")
-
-@app.route("/englishToFrench")
-def englishToFrench():
-    textToTranslate = request.args.get('textToTranslate')
-    # Write your code here
-    return "Translated text to French"
-
-@app.route("/frenchToEnglish")
-def frenchToEnglish():
-    textToTranslate = request.args.get('textToTranslate')
-    # Write your code here
-    return "Translated text to English"
+app = Flask("Translate app")
 
 @app.route("/")
-def renderIndexPage():
-    # Write the code to render template
+def homepage():
+    return render_template("index.html")
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+@app.route("/englishToFrench", methods=["GET"])
+def translate_to_french():
+    text = request.args.get('textToTranslate')
+    return machinetranslation.translator.english_to_french(text)
+
+@app.route("/frenchToEnglish", methods=["GET"])
+def translate_to_english():
+    text = request.args.get('textToTranslate')
+    return machinetranslation.translator.french_to_english(text)
+
+if __name__=="__main__":
+    app.run(debug=True, port=8080) 
+    # When no port is specified, starts at default port 5000
